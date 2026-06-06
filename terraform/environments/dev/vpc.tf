@@ -150,3 +150,4 @@ resource "aws_security_group" "mario" {
     Name = "${var.project_name}-mario-sg"
   }
 }
+
