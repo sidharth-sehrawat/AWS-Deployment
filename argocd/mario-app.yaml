@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/sidharth-sehrawat/AWS-Deployment.git
     targetRevision: main
-    path: k8s
+    path: apps/mario
 
   destination:
     server: https://kubernetes.default.svc
