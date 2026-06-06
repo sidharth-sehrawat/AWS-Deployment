@@ -1,6 +1,6 @@
 resource "aws_key_pair" "main" {
   key_name   = "${var.project_name}-key"
-  public_key = file("/home/sid2001sehrawat/.ssh/id_ed25519.pub")
+  public_key = var.public_key
 }
 
 data "aws_ami" "amazon_linux" {

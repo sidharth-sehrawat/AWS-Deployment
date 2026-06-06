@@ -45,3 +45,7 @@ variable "public_key_path" {
 variable "cluster_name" {
   type = string
 }
+
+variable "public_key" {
+  type = string
+}
