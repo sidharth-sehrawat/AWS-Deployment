@@ -17,9 +17,9 @@ resource "aws_s3_bucket" "terraform_state" {
   bucket = "${var.project_name}-${var.account_id}-tfstate"
 
   tags = {
-    Name = "${var.project_name}-tfstate"
+    Name        = "${var.project_name}-tfstate"
     Environment = "bootstrap"
-    ManagedBy = "Terraform"
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -60,9 +60,9 @@ resource "aws_dynamodb_table" "terraform_lock" {
     name = "LockID"
     type = "S"
   }
-  
-  point_in_time_recovery  {
+
+  point_in_time_recovery {
     enabled = true
-}
+  }
 
 }
