@@ -5,11 +5,11 @@ on:
     branches:
       - main
     paths:
-      - 'terraform/**'
+      - "terraform/**"
 
   pull_request:
     paths:
-      - 'terraform/**'
+      - "terraform/**"
 
 jobs:
 
@@ -54,4 +54,63 @@ jobs:
       - name: Terraform Plan
         env:
           TF_VAR_public_key: ${{ secrets.TF_VAR_public_key }}
-        run: terraform plan -var-file=terraform.tfvars -no-color
+        run: |
+          terraform plan \
+            -var-file=terraform.tfvars \
+            -lock-timeout=5m \
+            -out=tfplan \
+            -no-color
+
+      - name: Upload Terraform Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: terraform/environments/dev/tfplan
+
+  terraform-apply:
+
+    needs: terraform
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: production
+
+    defaults:
+      run:
+        working-directory: terraform/environments/dev
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Create tfvars file
+        run: |
+          cat <<EOF > terraform.tfvars
+          ${{ secrets.TF_VARS_FILE }}
+          EOF
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: terraform/environments/dev
+
+      - name: Terraform Apply
+        env:
+          TF_VAR_public_key: ${{ secrets.TF_VAR_public_key }}
+        run: terraform apply -auto-approve tfplan
