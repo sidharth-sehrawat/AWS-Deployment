@@ -53,5 +53,5 @@ jobs:
 
       - name: Terraform Plan
         env:
-        TF_VAR_public_key: ${{ secrets.TF_VAR_public_key }}
+          TF_VAR_public_key: ${{ secrets.TF_VAR_public_key }}
         run: terraform plan -var-file=terraform.tfvars -no-color
