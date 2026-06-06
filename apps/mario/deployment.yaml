@@ -19,7 +19,7 @@ spec:
       containers:
       - name: mario
 
-        image: 172121199482.dkr.ecr.ap-south-1.amazonaws.com/mario:v1
+        image: 172121199482.dkr.ecr.ap-south-1.amazonaws.com/mario:3cf509e626cfb068c1ea7e797f5911601c08f317
 
         ports:
         - containerPort: 8080
