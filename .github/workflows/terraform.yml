@@ -45,5 +45,13 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      - name: Create tfvars file
+        run: |
+          cat <<EOF > terraform.tfvars
+          ${{ secrets.TF_VARS_FILE }}
+          EOF
+
       - name: Terraform Plan
-        run: terraform plan -no-color
+        env:
+        TF_VAR_public_key: ${{ secrets.TF_VAR_public_key }}
+        run: terraform plan -var-file=terraform.tfvars -no-color
